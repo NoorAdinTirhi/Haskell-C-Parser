@@ -2,6 +2,9 @@ module Lib
     ( someFunc
 ) where
 
+import Invocation.Reader
+import Control.Monad
+import Invocation.SourceItem
 import Types.Types 
 import Variables.Variables 
 import Invocation.Reader 
@@ -12,6 +15,7 @@ import SyntaxTree.Blocks
 someFunc :: IO ()
 someFunc = do
             validateArgs
-            lines <- readInputFile
-
+            fileLines <- readInputFile
+            mapM putStrLn $ map show fileLines
+            -- forM_ fileLines $ \line -> do putStrLn $ show line
             putStrLn "Finished Reading"

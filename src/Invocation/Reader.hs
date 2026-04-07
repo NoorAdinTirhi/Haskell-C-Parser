@@ -1,8 +1,10 @@
 module Invocation.Reader (
     validateArgs,
-    readInputFile
+    readInputFile,
+    readInputFileStr
 ) where
 
+import Invocation.SourceItem
 import System.Environment 
 import Text.Regex.TDFA
 import Data.List.Split
@@ -20,15 +22,27 @@ validateArgs = do
 
 -- this is gonna be a long function if this project goes on
 
+readInputFileStr:: IO [String]
+readInputFileStr = do
+                argList <- getArgs
+                let path = head argList
+                topFileHandle <- openFile path ReadMode
+                content <- hGetContents topFileHandle
+                let fileLines = splitOn "\n" content
+                -- hClose topFileHandle
+                return (fileLines)
 
-readInputFile :: IO [String]
+
+readInputFile :: IO [SourceItem]
 readInputFile = do
                 argList <- getArgs
-                topFileHandle <- openFile (argList !! 0) ReadMode
+                let path = head argList
+                topFileHandle <- openFile path ReadMode
                 content <- hGetContents topFileHandle
-                let lines = splitOn "\n" content
-                hClose topFileHandle
-                return (lines)
+                let fileLines = splitOn "\n" content
+                let source = zipWith (\n line -> SourceItem line n path) [1..] fileLines
+                -- hClose topFileHandle
+                return (source)
 
 
 -- parseFile :: [String] -> [Block]

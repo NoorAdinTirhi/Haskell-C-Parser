@@ -1,16 +1,23 @@
 module SyntaxTree.Expressions
-(
-    Expression(..)
-) where
+  ( Expression (..),
+  )
+where
 
-import Variables.Variables (Variable)
-import Types.Types (CType)
+import Invocation.SourceItem
+import Types.Types 
+import Variables.Variables
 
-data Expression 
-    = Expression {expText :: String, expType :: CType}
-    | VarAccessExpression {varAccTarget :: Expression, varAccVar :: Variable}
-    -- | listAccessExp
-    | AddExpression {addLeftExp :: Expression, addRightExp :: Expression}
-    -- all the other types of arithemtic expressions ()
-    -- all the other types  of logical expressions 
-    deriving (Show, Eq)
+data Expression = Expression
+  { expSourceItem :: SourceItem,
+    expression :: ExpressionNode
+  }
+  deriving (Show, Eq)
+
+data ExpressionNode
+  = ExpressionNode {expText :: String, expType :: CType}
+  | VarAccessExpression {varAccTarget :: Expression, varAccVar :: Variable}
+  | -- | listAccessExp
+    AddExpression {addLeftExp :: Expression, addRightExp :: Expression}
+  -- all the other types of arithemtic expressions ()
+  -- all the other types  of logical expressions
+  deriving (Show, Eq)
